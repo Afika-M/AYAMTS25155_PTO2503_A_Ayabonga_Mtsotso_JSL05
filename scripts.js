@@ -72,6 +72,58 @@ function openTaskModal(task) {
   modal.showModal();
 }
 
+function openNewTaskModal() {
+  const modal = document.getElementById("task-modal");
+  const titleInput = document.getElementById("task-title");
+  const descInput = document.getElementById("task-desc");
+  const statusSelect = document.getElementById("task-status");
+
+  // reset inputs
+  titleInput.value = "";
+  descInput.value = "";
+  statusSelect.value = "todo";
+
+
+
+  modal.showModal();
+
+}
+
+//open new task modal
+function setupSaveTaskHandler() {
+  const form = document.getElementById("task-form");
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+
+    const modal = document.getElementById("task-modal");
+    const titleInput = document.getElementById("task-title");
+    const descInput = document.getElementById("task-desc");
+    const statusSelect = document.getElementById("task-status");
+
+    // create a new task
+    const newTask = {
+      id: initialTasks.length + 1,
+      title: titleInput.value,
+      description: descInput.value,
+      status: statusSelect.value,
+    };
+    // add to initialTasks array
+    initialTasks.push(newTask);
+
+   const container = getTaskContainerByStatus(newTask.status);
+    if (container) {
+      const taskElement = createTaskElement(newTask);
+      container.appendChild(taskElement);
+    }
+
+    modal.close();
+  });
+  
+  const addTaskBtn = document.getElementById("add-task-btn");
+  addTaskBtn.addEventListener("click", () => {
+    openNewTaskModal();
+  });
+}
 /**
  * Sets up modal close behavior.
  */
@@ -91,6 +143,7 @@ function initTaskBoard() {
   clearExistingTasks();
   renderTasks(initialTasks);
   setupModalCloseHandler();
+  setupSaveTaskHandler();
 }
 
 // Wait until DOM is fully loaded

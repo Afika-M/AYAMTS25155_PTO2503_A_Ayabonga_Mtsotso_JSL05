@@ -76,7 +76,7 @@ function openTaskModal(task) {
   modal.showModal();
 }
 
-function openNewTaskModal(task) {
+function openNewTaskModal() {
   const modal = document.getElementById("task-modal");
   const titleInput = document.getElementById("task-title");
   const descInput = document.getElementById("task-desc");
@@ -85,7 +85,9 @@ function openNewTaskModal(task) {
 
   // reset inputs
   titleInput.value = "";
+  titleInput.placeholder = "e.g., Rest";
   descInput.value = "";
+  descInput.placeholder = "e.g., Take a nap";
   statusSelect.value = "todo";
 
   // show create button when creating new task
@@ -121,6 +123,7 @@ function setupSaveTaskHandler() {
       const taskElement = createTaskElement(newTask);
       container.appendChild(taskElement);
     }
+    taskCounter();
 
     modal.close();
   });
@@ -130,6 +133,26 @@ function setupSaveTaskHandler() {
     openNewTaskModal();
   });
 }
+/** add task counters to column headers
+ * @param {string} status - The task status ('todo', 'doing', or 'done').   
+ * 
+ */
+function taskCounter() {
+  const todoCount = initialTasks.filter(function (task) {
+    return task.status === "todo";
+  }).length;
+  const doingCount = initialTasks.filter(function (task) {
+    return task.status === "doing";
+  }).length;
+  const doneCount = initialTasks.filter(function (task) {
+    return task.status === "done";
+  }).length;
+
+  document.getElementById("toDoText").textContent = `TODO (${todoCount})`;
+  document.getElementById("doingText").textContent = `DOING (${doingCount})`;
+  document.getElementById("doneText").textContent = `DONE (${doneCount})`;
+}
+taskCounter();
 /**
  * Sets up modal close behavior.
  */

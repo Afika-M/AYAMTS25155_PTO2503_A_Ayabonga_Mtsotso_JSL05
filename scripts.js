@@ -64,26 +64,32 @@ function openTaskModal(task) {
   const titleInput = document.getElementById("task-title");
   const descInput = document.getElementById("task-desc");
   const statusSelect = document.getElementById("task-status");
+  const saveBtn = document.getElementById("save-task-btn");
 
   titleInput.value = task.title;
   descInput.value = task.description;
   statusSelect.value = task.status;
 
+  // hide create button when viewing existing task
+  saveBtn.style.display = "none";
+
   modal.showModal();
 }
 
-function openNewTaskModal() {
+function openNewTaskModal(task) {
   const modal = document.getElementById("task-modal");
   const titleInput = document.getElementById("task-title");
   const descInput = document.getElementById("task-desc");
   const statusSelect = document.getElementById("task-status");
+  const saveBtn = document.getElementById("save-task-btn");
 
   // reset inputs
   titleInput.value = "";
   descInput.value = "";
   statusSelect.value = "todo";
 
-
+  // show create button when creating new task
+  saveBtn.style.display = "block";
 
   modal.showModal();
 

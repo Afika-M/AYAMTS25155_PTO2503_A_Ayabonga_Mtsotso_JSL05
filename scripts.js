@@ -1,4 +1,9 @@
 import { initialTasks } from "./initialData.js";
+
+/** 
+ * Handles loading and saving tasks to localStorage.
+ * Manages rendering tasks to the UI and modal interactions.
+ */ 
 // Local storage key
 const STORAGE_KEY = 'kanban-tasks';
 

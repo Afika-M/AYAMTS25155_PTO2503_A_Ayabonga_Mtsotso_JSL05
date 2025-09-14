@@ -1,4 +1,26 @@
 import { initialTasks } from "./initialData.js";
+// Local storage key
+const STORAGE_KEY = 'kanban-tasks';
+
+// Get tasks from local storage or use initial tasks
+function getTasks() {
+  const storedTasks = localStorage.getItem(STORAGE_KEY);
+  if (storedTasks) {
+    return JSON.parse(storedTasks);
+  } else {
+    // Save initial tasks to local storage for first-time users
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(initialTasks));
+    return initialTasks;
+  }
+}
+
+// Save tasks to local storage
+function saveTasks(tasks) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+}
+
+// Get current tasks
+let currentTasks = getTasks();
 
 /**
  * Creates a single task DOM element.
@@ -110,13 +132,16 @@ function setupSaveTaskHandler() {
 
     // create a new task
     const newTask = {
-      id: initialTasks.length + 1,
+      id: currentTasks.length + 1,
       title: titleInput.value,
       description: descInput.value,
       status: statusSelect.value,
     };
-    // add to initialTasks array
-    initialTasks.push(newTask);
+    // add to current tasks array
+    currentTasks.push(newTask);
+
+    // save to local storage
+    saveTasks(currentTasks);
 
    const container = getTaskContainerByStatus(newTask.status);
     if (container) {
@@ -138,13 +163,13 @@ function setupSaveTaskHandler() {
  * 
  */
 function taskCounter() {
-  const todoCount = initialTasks.filter(function (task) {
+  const todoCount = currentTasks.filter(function (task) {
     return task.status === "todo";
   }).length;
-  const doingCount = initialTasks.filter(function (task) {
+  const doingCount = currentTasks.filter(function (task) {
     return task.status === "doing";
   }).length;
-  const doneCount = initialTasks.filter(function (task) {
+  const doneCount = currentTasks.filter(function (task) {
     return task.status === "done";
   }).length;
 
@@ -152,7 +177,7 @@ function taskCounter() {
   document.getElementById("doingText").textContent = `DOING (${doingCount})`;
   document.getElementById("doneText").textContent = `DONE (${doneCount})`;
 }
-taskCounter();
+
 /**
  * Sets up modal close behavior.
  */
@@ -170,7 +195,8 @@ function setupModalCloseHandler() {
  */
 function initTaskBoard() {
   clearExistingTasks();
-  renderTasks(initialTasks);
+  renderTasks(currentTasks);
+  taskCounter();
   setupModalCloseHandler();
   setupSaveTaskHandler();
 }
